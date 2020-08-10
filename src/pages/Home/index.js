@@ -9,31 +9,33 @@ const Home = () => {
   const {loading,data,error} = useQuery(LIST_COUNTRY);
 
   const [search, setSearch] = useState('');
+  // const [countries, setCountries] = useState(data);
 
-  let filteredData = data;
-  // const [filteredData, setFilteredData] = useState({});
+  let countries = data;
   
   // useEffect(() => {
-  //   handleSearch(search)
-  // },[search])
+  //   setCountries(data);
+  // }, [data]);
   
+  // useEffect(() => {
+  //   setCountries(
+  //     countries.filter(country =>
+  //       country.name.toLowerCase().includes(search.toLowerCase())
+  //     )
+  //   );
+  // }, [search, countries]);
+
   function handleSearch(search){
     setSearch(search)
 
-    // console.log(data.Country);
-    filteredData = data.Country.filter(country => {
+    countries = data.Country.filter(country => {
       return country.name.toLowerCase().includes(search.toLowerCase())      
     })
-    // setFilteredData(data.Country.filter(country => {
+    // setCountries(data.Country.filter(country => {
     //   return country.name.toLowerCase().includes(search.toLowerCase())      
     // }))
 
-    console.log(filteredData.length);
-
-    
-    // const { loading, data, error } = this.useQuery(LIST_COUNTRY, {
-    //   variables: { name: search },
-    // });
+    console.log(countries.length);
   }
 
   if (loading) {
@@ -51,19 +53,18 @@ const Home = () => {
           <Line>
             <FaSearch color={'#dcdce6'}></FaSearch>
             <Input type='search' 
-                  placeholder={'Buscar'}
-                  onChange={e => handleSearch(e.target.value)}
-                  value={search}></Input>  
+                   placeholder={'Buscar'}
+                   onChange={e => handleSearch(e.target.value)}
+                   value={search}></Input>  
           </Line>        
       </Header>
 
-      {!loading && (
-        <List value={filteredData}>
-          {filteredData.Country.map(country => (
-            <Card key={country._id} country={country}/>
-          ))}
-        </List>
-      )}
+      <List value={countries}>
+        {countries.Country.map(country => (
+          <Card key={country._id} country={country}/>
+        ))}
+      </List>
+      
     </>
   );
 }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
-import { LIST_COUNTRY, UPDATE_COUNTRY} from '../../services';
+import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { FaArrowLeft, FaPen } from 'react-icons/fa';
+import { LIST_COUNTRY} from '../../services';
 import {
   Title,
   Header,
@@ -11,14 +12,19 @@ import {
   Button,
   CardImage,
   Text,
-  Line
+  Line,
+  ButtonText,
+  BackButton
 } from './styles';
+import {ApolloProvider, createHttpLink, InMemoryCache, ApolloClient} from '@apollo/client'
+import gql from 'graphql-tag';
 
 const Detail = () => {
+
   const [name,setName] = useState('');
   const [capital,setCapital] = useState('');
-  const [area,setArea] = useState(0);
-  const [population,setPopulation] = useState(0);
+  const [area,setArea] = useState('');
+  const [population,setPopulation] = useState('');
   const [topLevel,setTopLevel] = useState('');  
   
   const country = { flag: {}, topLevelDomains: {} };
@@ -27,10 +33,47 @@ const Detail = () => {
   const { loading, data, error } = useQuery(LIST_COUNTRY, {
     variables: { id: params.id },
   });
-  
-  const [updateCountry] = useMutation(UPDATE_COUNTRY);
 
-  console.log(data);
+  const history = useHistory('/');
+
+  // const httplink = new createHttpLink({uri:'https://countries-274616.ew.r.appspot.com'})
+  const cache = new InMemoryCache();
+  // const client = new ApolloClient({link:httplink,cache:cache});
+
+  function handleUpdate(){
+    cache.modify({
+      id: params.id,
+      fields:{
+        name(name){
+          return name;
+        },
+      },
+      broadcast: false
+    })
+
+    console.log(name);
+    // history.push('/')    
+
+    const nameFrag = gql`
+    fragment Update on listCountry {
+      name
+    }
+    `;
+  
+    const fragmentResult = cache.writeFragment({
+      id: params.id,
+      fragment: nameFrag,
+      data: {
+        name: name
+      }
+    });  
+
+  }
+
+  function backPage(){
+    history.push('/')
+  }
+
 
   if (loading) {
     return(
@@ -43,6 +86,10 @@ const Detail = () => {
   return (
     <>
       <Header>
+        <BackButton onClick={backPage}>
+        <FaArrowLeft></FaArrowLeft>
+        </BackButton>
+        
         <Title>Detalhe do País</Title>
       </Header>
 
@@ -53,41 +100,42 @@ const Detail = () => {
 
         <Line>
           <Text>Nome: </Text>
-          <Input onChangeText={setName} v
+          <Input onChange={e => setName(e.target.value)}
                  value={name} 
                  placeholder={data?.Country[0].name}></Input>
         </Line>
 
         <Line>
           <Text>Capital: </Text>
-          <Input onChangeText={setCapital} 
+          <Input onChange={e => setCapital(e.target.value)} 
                  value={capital} 
                  placeholder={data?.Country[0].capital}></Input>
         </Line>
 
         <Line>
           <Text>Área: </Text>
-          <Input onChangeText={setArea} 
-                //  value={area}                  
+          <Input onChange={e => setArea(e.target.value)} 
+                 value={area}                  
                  placeholder={data?.Country[0].area}></Input>
         </Line>
 
         <Line>
           <Text>População: </Text>
-          <Input onChangeText={setPopulation} 
-                //  value={population} 
+          <Input onChange={e => setPopulation(e.target.value)} 
+                 value={population} 
                  placeholder={data?.Country[0].population}></Input>
         </Line>
 
         <Line>
           <Text>Top Level: </Text>
-          <Input onChangeText={setTopLevel} 
+          <Input onChange={e => setTopLevel(e.target.value)} 
                  value={topLevel} 
                  placeholder={data?.Country[0].topLevelDomains[0].name}></Input>
         </Line>
 
-        <Button onClick={updateCountry({ variables: { type: {name} } })}>
-          Alterar
+        <Button onClick={handleUpdate}>
+          <ButtonText>Alterar</ButtonText> 
+          <FaPen></FaPen>
         </Button>
       </Card>
     </>

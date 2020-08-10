@@ -1,0 +1,30 @@
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+.node-install: &node-install
+  image: node:12
+  before_script:
+    - yarn install
+
+lint:
+  <<: *node-install
+  scripts:
+    - yarn lint
+
+test:
+  <<: *node-install
+  scripts:
+    - yarn test
+
+build:
+  <<: *node-install
+  scripts:
+    - yarn build
+
+deploy:
+  <<: *node-install
+  scripts:
+    - yarn lint

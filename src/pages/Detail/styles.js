@@ -1,13 +1,16 @@
 import styled from 'styled-components';
 
 export const Header = styled.div`
-  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  width: 400px;
   margin-bottom: 10px;
 `;
 
 export const Title = styled.h1`
   color: #41414d;
   font-family: Arial, Helvetica, sans-serif;
+  margin-left: 40px;
 `;
 
 export const Card = styled.div`
@@ -72,4 +75,24 @@ export const Input = styled.input`
   border-radius: 8px;
   padding: 0 10px;
   margin: 5px 0
+`;
+
+export const ButtonText = styled.label`
+  padding-right: 10px;
+`;
+
+export const BackButton = styled.button`
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 0;
+  color: #e2b029;
+  font-size: 20px;
+  transition: filter 0.2s;
+  border-radius: 8px;
+  padding-top: 5px;
+
+  &:hover {
+  filter: brightness(90%);
+  }
 `;
