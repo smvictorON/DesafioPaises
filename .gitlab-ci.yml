@@ -2,7 +2,6 @@ stages:
   - lint
   - test
   - build
-  - deploy
 
 .node-install: &node-install
   image: node:12
@@ -10,21 +9,19 @@ stages:
     - yarn install
 
 lint:
+  stage: lint
   <<: *node-install
-  scripts:
+  script:
     - yarn lint
 
 test:
+  stage: test
   <<: *node-install
-  scripts:
+  script:
     - yarn test
 
 build:
+  stage: build
   <<: *node-install
-  scripts:
+  script:
     - yarn build
-
-deploy:
-  <<: *node-install
-  scripts:
-    - yarn lint
