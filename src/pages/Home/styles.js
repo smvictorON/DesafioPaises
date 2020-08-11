@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const Header = styled.div`
-  align-items: flex-start;
   margin-bottom: 10px;
 `;
 

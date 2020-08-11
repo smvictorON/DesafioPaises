@@ -49,7 +49,7 @@ const Home = () => {
         <div>
           <Title2>Desculpe, nenhum país encontrado <span role="img" aria-label="decepcionado">😅</span></Title2>
         </div>) : (
-          <List value={countries}>
+          <List>
             {countries.map(country => (
               <Card key={country._id} country={country}/>
             ))}

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Item = styled.li`
   background: #FFF;
-  padding: 18px;
+  padding: 15px;
   border-radius: 8px;
   position: relative;  
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
@@ -17,7 +17,7 @@ export const Image = styled.img`
 `;
 
 export const Name = styled.h2`
-  font-size: 24px;
+  font-size: 20px;
   color: #41414d;
   font-family: Arial, Helvetica, sans-serif;
 `;
