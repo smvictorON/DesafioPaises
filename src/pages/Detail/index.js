@@ -16,70 +16,109 @@ import {
   ButtonText,
   BackButton
 } from './styles';
-import {ApolloProvider, createHttpLink, InMemoryCache, ApolloClient} from '@apollo/client'
-import gql from 'graphql-tag';
+import {useApolloClient} from '@apollo/client'
 
 const Detail = () => {
 
-  const [name,setName] = useState('');
-  const [capital,setCapital] = useState('');
-  const [area,setArea] = useState('');
-  const [population,setPopulation] = useState('');
-  const [topLevel,setTopLevel] = useState('');  
-  
-  const country = { flag: {}, topLevelDomains: {} };
+  const [country, setCountry] = useState({
+    name: '',
+    capital: '',
+    area: '',
+    population: '',
+    topLevelDomains: [
+      {
+        name: ''
+      }
+    ]
+  });
+
+  const client = useApolloClient();
   const { params } = useRouteMatch();
 
   const { loading, data, error } = useQuery(LIST_COUNTRY, {
     variables: { id: params.id },
+    onCompleted: res => {
+      if (res && res.Country) {
+        setCountry({
+          ...res.Country[0]
+        })
+      }
+    }
   });
 
   const history = useHistory('/');
 
-  // const httplink = new createHttpLink({uri:'https://countries-274616.ew.r.appspot.com'})
-  const cache = new InMemoryCache();
-  // const client = new ApolloClient({link:httplink,cache:cache});
+  const handleUpdate = () => {
+    const countries = client.readQuery({
+      query: LIST_COUNTRY
+    });
 
-  function handleUpdate(){
-    cache.modify({
-      id: params.id,
-      fields:{
-        name(name){
-          return name;
-        },
-      },
-      broadcast: false
+    console.log(countries)
+    client.writeQuery({
+      query: LIST_COUNTRY,
+      data: {
+        Country: countries.Country.map(item => {
+          if (params.id === item._id) {
+            return {
+              ...item,
+              ...country
+            }
+          }
+
+          return item;
+        })
+      }
     })
 
-    console.log(name);
-    // history.push('/')    
-
-    const nameFrag = gql`
-    fragment Update on listCountry {
-      name
-    }
-    `;
-  
-    const fragmentResult = cache.writeFragment({
-      id: params.id,
-      fragment: nameFrag,
-      data: {
-        name: name
-      }
-    });  
-
+    backPage();
   }
 
   function backPage(){
     history.push('/')
   }
 
-
   if (loading) {
     return(
       <div>
         <Title>Carregando...</Title>
       </div>
+    )
+  }
+
+  const handleChange = (e) => {
+    setCountry({
+      ...country,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleChangeTLD = (e) => {
+    setCountry({
+      ...country,
+      topLevelDomains: [
+        {
+          name: e.target.value
+        }
+      ]
+    })
+  }
+ 
+  function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+  }
+
+  function check(){
+    try {
+      const res = client.readQuery({query: LIST_COUNTRY});
+      return (res && res.Country && res.Country.length > 0);
+    } catch {
+      return false;
+    }
+  }
+
+  if (isBlank(params.id) || isBlank(country.name)) { 
+    return(
+      <Title>Desculpe, nenhum país encontrado 😅</Title>
     )
   }
 
@@ -95,45 +134,40 @@ const Detail = () => {
 
       <Card>
         <CardImage>
-          <Image src={data?.Country[0].flag.svgFile}></Image>
+          <Image src={data.Country[0].flag.svgFile}></Image>
         </CardImage>
 
         <Line>
           <Text>Nome: </Text>
-          <Input onChange={e => setName(e.target.value)}
-                 value={name} 
-                 placeholder={data?.Country[0].name}></Input>
+          <Input name="name" onChange={handleChange}
+                value={country.name}></Input>
         </Line>
 
         <Line>
           <Text>Capital: </Text>
-          <Input onChange={e => setCapital(e.target.value)} 
-                 value={capital} 
-                 placeholder={data?.Country[0].capital}></Input>
+          <Input name="capital" onChange={handleChange} 
+                value={country.capital}></Input>
         </Line>
 
         <Line>
           <Text>Área: </Text>
-          <Input onChange={e => setArea(e.target.value)} 
-                 value={area}                  
-                 placeholder={data?.Country[0].area}></Input>
+          <Input name="area" onChange={handleChange} 
+                value={country.area}></Input>
         </Line>
 
         <Line>
           <Text>População: </Text>
-          <Input onChange={e => setPopulation(e.target.value)} 
-                 value={population} 
-                 placeholder={data?.Country[0].population}></Input>
+          <Input name="population" onChange={handleChange} 
+                value={country.population}></Input>
         </Line>
 
         <Line>
           <Text>Top Level: </Text>
-          <Input onChange={e => setTopLevel(e.target.value)} 
-                 value={topLevel} 
-                 placeholder={data?.Country[0].topLevelDomains[0].name}></Input>
+          <Input name="topLevel" onChange={handleChangeTLD} 
+                value={country.topLevelDomains[0].name}></Input>
         </Line>
 
-        <Button onClick={handleUpdate}>
+        <Button onClick={handleUpdate} disabled={!check()}>
           <ButtonText>Alterar</ButtonText> 
           <FaPen></FaPen>
         </Button>

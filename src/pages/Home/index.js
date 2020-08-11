@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {useQuery} from '@apollo/client';
 import {LIST_COUNTRY} from '../../services';
 import Card from './components/Card';
@@ -6,39 +6,26 @@ import { FaSearch } from 'react-icons/fa';
 import {List, Title, Header, Input, Line} from './styles';
 
 const Home = () => {
-  const {loading,data,error} = useQuery(LIST_COUNTRY);
+  const [search, setSearch] = useState(false);
+  const [countries, setCountries] = useState([]);
+  // const {loading,data,error} = useQuery(LIST_COUNTRY,{variables:{name: search.toLowerCase()}});
 
-  const [search, setSearch] = useState('');
-  // const [countries, setCountries] = useState(data);
-
-  let countries = data;
-  
-  // useEffect(() => {
-  //   setCountries(data);
-  // }, [data]);
-  
-  // useEffect(() => {
-  //   setCountries(
-  //     countries.filter(country =>
-  //       country.name.toLowerCase().includes(search.toLowerCase())
-  //     )
-  //   );
-  // }, [search, countries]);
+  const {loading,data,error} = useQuery(LIST_COUNTRY,{
+    onCompleted: res => {
+      if (res.Country && res.Country.length > 0)
+        setCountries(res.Country);    
+    }
+  });
 
   function handleSearch(search){
-    setSearch(search)
+    setSearch(true);
 
-    countries = data.Country.filter(country => {
+    setCountries(data.Country.filter(country => {
       return country.name.toLowerCase().includes(search.toLowerCase())      
-    })
-    // setCountries(data.Country.filter(country => {
-    //   return country.name.toLowerCase().includes(search.toLowerCase())      
-    // }))
-
-    console.log(countries.length);
+    }))
   }
 
-  if (loading) {
+  if (loading && !data) {
     return(
       <div>
         <Title>Carregando...</Title>
@@ -54,17 +41,20 @@ const Home = () => {
             <FaSearch color={'#dcdce6'}></FaSearch>
             <Input type='search' 
                    placeholder={'Buscar'}
-                   onChange={e => handleSearch(e.target.value)}
-                   value={search}></Input>  
+                   onChange={e => handleSearch(e.target.value)}></Input>  
           </Line>        
       </Header>
 
-      <List value={countries}>
-        {countries.Country.map(country => (
-          <Card key={country._id} country={country}/>
-        ))}
-      </List>
-      
+      {countries.length === 0 && search ? (      
+        <div>
+          <Title>Desculpe, nenhum país encontrado 😅</Title>
+        </div>) : (
+          <List value={countries}>
+            {countries.map(country => (
+              <Card key={country._id} country={country}/>
+            ))}
+          </List>)
+        }
     </>
   );
 }

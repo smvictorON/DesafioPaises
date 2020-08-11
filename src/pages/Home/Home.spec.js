@@ -1,15 +1,28 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act, cleanup } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 
-import Home from './index';
+import Home from './';
 
 import { LIST_COUNTRY } from '../../services';
 
+afterEach(cleanup);
+
 describe('Home', () => {
   it('Renderizar componente', () => {
+    const mocks = [
+      {
+        request: {
+          query: LIST_COUNTRY
+        },
+        result: {
+          data: {}
+        }
+      }
+    ];
+
     const { getByText } = render(
-      <MockedProvider>
+      <MockedProvider mocks={mocks}>
         <Home />
       </MockedProvider>
     );
@@ -17,17 +30,17 @@ describe('Home', () => {
     expect(getByText('Carregando...')).toBeDefined();
   });
 
-  it('Listagem de bandeiras', () => {
+  it('Listagem de bandeiras', async () => {
     const mocks = [
       {
         request: {
-          query: LIST_COUNTRY,
-          variables: { _id: undefined }
+          query: LIST_COUNTRY
         },
         result: {
           data: {
             Country: [
               {
+                name: 'exemplo',
                 _id: '1',
                 capital: 'capital',
                 area: 'area',
@@ -35,7 +48,6 @@ describe('Home', () => {
                 topLevelDomains: [{ name: 'name' }],
                 flag: {
                   svgFile: 'svgFile'
-           
                 }
               }
             ]
@@ -44,12 +56,16 @@ describe('Home', () => {
       }
     ];
 
-    const { getByText, debug } = render(
+    const { getByText } = render(
       <MockedProvider mocks={mocks}>
         <Home />
       </MockedProvider>
     );
 
-    debug();
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(() => resolve(true),2000));
+    });
+
+    expect(getByText('capital')).toBeDefined();
   });
 });

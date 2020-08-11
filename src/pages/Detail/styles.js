@@ -50,10 +50,10 @@ export const Text = styled.label`
 export const Button = styled.button`
   width: 100%;
   height: 60px;
-  background: #e2b029;
+  background: ${props => props.disabled ? '#f0f0f5' : '#e2b029'};
   border: 0;
   border-radius: 8px;
-  color: #fff;
+  color:${props => props.disabled ? '#41414d' : '#FFF'};
   font-weight: 700;
   margin-top: 10px;
   display: inline-block;
@@ -64,7 +64,7 @@ export const Button = styled.button`
   transition: filter 0.2s;
 
   &:hover {
-  filter: brightness(90%);
+    filter: ${props => props.disabled ? 'brightness(100%)' : 'brightness(90%)'};
   }
 `;
 
