@@ -7,7 +7,7 @@ Tecnologias utilizadas:
 - Gitlab Pipeline
 - Netlify Deploy
 
-acesse: https://softplanteste.netlify.app
+acesse: https://desafiopaises.netlify.app/
 
 ![](public/home.png)
 ![](public/detail.png)
