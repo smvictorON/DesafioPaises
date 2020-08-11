@@ -8,6 +8,7 @@ export const Item = styled.li`
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   cursor: pointer;
+  max-height: 200px;
 `;
 
 export const Image = styled.img`

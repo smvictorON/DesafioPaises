@@ -3,14 +3,14 @@ import {useQuery} from '@apollo/client';
 import {LIST_COUNTRY} from '../../services';
 import Card from './components/Card';
 import { FaSearch } from 'react-icons/fa';
-import {List, Title, Header, Input, Line} from './styles';
+import {List, Title, Header, Input, Line, Title2} from './styles';
 
 const Home = () => {
   const [search, setSearch] = useState(false);
   const [countries, setCountries] = useState([]);
   // const {loading,data,error} = useQuery(LIST_COUNTRY,{variables:{name: search.toLowerCase()}});
 
-  const {loading,data,error} = useQuery(LIST_COUNTRY,{
+  const {loading,data} = useQuery(LIST_COUNTRY,{
     onCompleted: res => {
       if (res.Country && res.Country.length > 0)
         setCountries(res.Country);    
@@ -47,7 +47,7 @@ const Home = () => {
 
       {countries.length === 0 && search ? (      
         <div>
-          <Title>Desculpe, nenhum país encontrado 😅</Title>
+          <Title2>Desculpe, nenhum país encontrado <span role="img" aria-label="decepcionado">😅</span></Title2>
         </div>) : (
           <List value={countries}>
             {countries.map(country => (

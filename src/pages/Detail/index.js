@@ -35,7 +35,7 @@ const Detail = () => {
   const client = useApolloClient();
   const { params } = useRouteMatch();
 
-  const { loading, data, error } = useQuery(LIST_COUNTRY, {
+  const { loading, data } = useQuery(LIST_COUNTRY, {
     variables: { id: params.id },
     onCompleted: res => {
       if (res && res.Country) {
@@ -118,7 +118,7 @@ const Detail = () => {
 
   if (isBlank(params.id) || isBlank(country.name)) { 
     return(
-      <Title>Desculpe, nenhum país encontrado 😅</Title>
+      <Title>Desculpe, nenhum país encontrado <span role="img" aria-label="decepcionado">😅</span></Title>
     )
   }
 
@@ -139,31 +139,31 @@ const Detail = () => {
 
         <Line>
           <Text>Nome: </Text>
-          <Input name="name" onChange={handleChange}
+          <Input name="name" onChange={handleChange} disabled={!check()}
                 value={country.name}></Input>
         </Line>
 
         <Line>
           <Text>Capital: </Text>
-          <Input name="capital" onChange={handleChange} 
+          <Input name="capital" onChange={handleChange} disabled={!check()} 
                 value={country.capital}></Input>
         </Line>
 
         <Line>
           <Text>Área: </Text>
-          <Input name="area" onChange={handleChange} 
+          <Input name="area" onChange={handleChange} disabled={!check()} 
                 value={country.area}></Input>
         </Line>
 
         <Line>
           <Text>População: </Text>
-          <Input name="population" onChange={handleChange} 
+          <Input name="population" onChange={handleChange} disabled={!check()} 
                 value={country.population}></Input>
         </Line>
 
         <Line>
           <Text>Top Level: </Text>
-          <Input name="topLevel" onChange={handleChangeTLD} 
+          <Input name="topLevel" onChange={handleChangeTLD} disabled={!check()}
                 value={country.topLevelDomains[0].name}></Input>
         </Line>
 

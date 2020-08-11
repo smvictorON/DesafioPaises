@@ -17,8 +17,9 @@ lint:
 test:
   stage: test
   <<: *node-install
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/ #https://gitlab.com/gitlab-org/gitlab-foss/-/issues/29642
   script:
-    - yarn test
+    - yarn coverage
 
 build:
   stage: build

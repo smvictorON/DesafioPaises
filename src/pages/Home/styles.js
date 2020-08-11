@@ -10,12 +10,18 @@ export const Title = styled.h1`
   font-family: Arial, Helvetica, sans-serif;
 `;
 
+export const Title2 = styled.h1`
+  color: #41414d;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 500px;
+`;
+
 export const List = styled.ul`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 20px;
+  grid-gap: 10px;
   list-style: none;  
-  max-height: 500px;
+  height: 500px;
 `;
 
 export const Input = styled.input`
