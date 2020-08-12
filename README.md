@@ -1,6 +1,6 @@
-**Desafio Técnico - Softplan**
+**Desafio Países**
 
-Tecnologias utilizadas:
+Tecnologias utilizadas: 
 - React
 - Apollo GraphQL
 - Styled Components
