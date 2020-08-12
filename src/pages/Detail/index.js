@@ -53,7 +53,6 @@ const Detail = () => {
       query: LIST_COUNTRY
     });
 
-    console.log(countries)
     client.writeQuery({
       query: LIST_COUNTRY,
       data: {
@@ -126,7 +125,7 @@ const Detail = () => {
     <>
       <Header>
         <BackButton onClick={backPage}>
-        <FaArrowLeft></FaArrowLeft>
+          <FaArrowLeft></FaArrowLeft>
         </BackButton>
         
         <Title>Detalhe do País</Title>
@@ -140,31 +139,31 @@ const Detail = () => {
         <Line>
           <Text>Nome: </Text>
           <Input name="name" onChange={handleChange} disabled={!check()}
-                value={country.name}></Input>
+            value={country.name}></Input>
         </Line>
 
         <Line>
           <Text>Capital: </Text>
           <Input name="capital" onChange={handleChange} disabled={!check()} 
-                value={country.capital}></Input>
+            value={country.capital}></Input>
         </Line>
 
         <Line>
           <Text>Área: </Text>
           <Input name="area" onChange={handleChange} disabled={!check()} 
-                value={country.area}></Input>
+            value={country.area}></Input>
         </Line>
 
         <Line>
           <Text>População: </Text>
           <Input name="population" onChange={handleChange} disabled={!check()} 
-                value={country.population}></Input>
+            value={country.population}></Input>
         </Line>
 
         <Line>
           <Text>Top Level: </Text>
           <Input name="topLevel" onChange={handleChangeTLD} disabled={!check()}
-                value={country.topLevelDomains[0].name}></Input>
+            value={country.topLevelDomains[0].name}></Input>
         </Line>
 
         <Button onClick={handleUpdate} disabled={!check()}>

@@ -37,24 +37,24 @@ const Home = () => {
     <>
       <Header>
         <Title>Conheça todos os Países</Title>
-          <Line>
-            <FaSearch color={'#dcdce6'}></FaSearch>
-            <Input type='search' 
-                   placeholder={'Buscar'}
-                   onChange={e => handleSearch(e.target.value)}></Input>  
-          </Line>        
+        <Line>
+          <FaSearch color={'#dcdce6'}></FaSearch>
+          <Input type='search' 
+            placeholder={'Buscar'}
+            onChange={e => handleSearch(e.target.value)}></Input>  
+        </Line>        
       </Header>
 
       {countries.length === 0 && search ? (      
         <div>
           <Title2>Desculpe, nenhum país encontrado <span role="img" aria-label="decepcionado">😅</span></Title2>
         </div>) : (
-          <List>
-            {countries.map(country => (
-              <Card key={country._id} country={country}/>
-            ))}
-          </List>)
-        }
+        <List>
+          {countries.map(country => (
+            <Card key={country._id} country={country}/>
+          ))}
+        </List>)
+      }
     </>
   );
 }
